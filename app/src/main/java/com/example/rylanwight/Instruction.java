@@ -1,6 +1,8 @@
 package com.example.rylanwight;
 
-public class Instruction
+import java.io.Serializable;
+
+public class Instruction implements Serializable
 {
     private int recipeId;
     private String instruction;

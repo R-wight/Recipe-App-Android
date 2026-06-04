@@ -1,5 +1,6 @@
 package com.example.rylanwight;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,8 +15,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements RecipeSelectedListener
+{
 
     Toolbar toolbar;
 
@@ -24,6 +27,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
+        //Obtain the Fragment Manager, this lets us access fragment instances
+        FragmentManager manager = getSupportFragmentManager();
+        //Obtain references to the Fragment
+        RecipeListFragment listFragment = (RecipeListFragment) manager.findFragmentById(R.id.listFragment);
+        listFragment.setRecipeSelectedListener(this); //Might not need this
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
@@ -52,12 +62,24 @@ public class MainActivity extends AppCompatActivity {
     {
         if(item.getItemId() == R.id.mnuViewRecipes)
         {
-            Toast.makeText(this, "View Recipes", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "View Recipes", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, view_recipe.class); // this is the activity that we want to start
+            this.startActivity(intent);
+
         }
         else //New recipe was clicked
         {
             Toast.makeText(this, "New Recipe", Toast.LENGTH_LONG).show();
         }
         return true;
+    }
+
+    @Override
+    public void setSelectedRecipe(Recipe recipe)
+    {
+        Toast.makeText(this, "Open: " + recipe.getName(), Toast.LENGTH_SHORT).show();
+        //Intent intent = new Intent(this, DetailActivity.class);
+        //intent.putExtra("course", course);
+        //this.startActivity(intent);
     }
 }

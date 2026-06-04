@@ -1,6 +1,7 @@
 package com.example.rylanwight;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
 import android.view.LayoutInflater;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -64,7 +66,6 @@ public class RecipeListFragment extends Fragment
                 ingredients2,
                 instructions2
         ));
-        /// NEED TO SET UP RECYCLERVIEW
         recipeList = (RecyclerView) recipeListLayout.findViewById(R.id.recipeList);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recipeList.setLayoutManager(manager);
@@ -72,11 +73,18 @@ public class RecipeListFragment extends Fragment
             @Override
             public void onItemClick(View view, int position)
             {
+
                 Toast.makeText(getContext(), recipes.get(position).getName(), Toast.LENGTH_SHORT).show();
-                //This should do something else
+                //View the recipe and pass information
+                Intent intent = new Intent(view.getContext(), view_recipe.class); // this is the activity that we want to start
+                intent.putExtra("recipe", recipes.get(position));
+                view.getContext().startActivity(intent);
+
             }
         });
         recipeList.setAdapter(recipeAdapter);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recipeList.getContext(), manager.getOrientation());
+        recipeList.addItemDecoration(dividerItemDecoration);
         return recipeListLayout;
     }
 

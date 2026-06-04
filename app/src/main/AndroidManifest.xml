@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RylanWight">
         <activity
+            android:name=".view_recipe"
+            android:exported="false" />
+        <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>

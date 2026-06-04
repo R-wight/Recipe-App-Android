@@ -1,6 +1,8 @@
 package com.example.rylanwight;
 
-public class Ingredient
+import java.io.Serializable;
+
+public class Ingredient implements Serializable
 {
     private int recipeId;
     private String ingredient;
