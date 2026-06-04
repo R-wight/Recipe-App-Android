@@ -7,6 +7,45 @@
     android:layout_height="match_parent"
     tools:context=".view_recipe">
 
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ingredientsCard"
+        android:layout_width="450px"
+        android:layout_height="700px"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="236dp"
+        android:maxHeight="200px"
+        app:cardBackgroundColor="#C9C3BD"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRecipeName">
+
+        <TextView
+            android:id="@+id/tvIngredientsTitle"
+            android:layout_width="127dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginEnd="113dp"
+            android:layout_marginRight="113dp"
+            android:layout_marginBottom="15dp"
+            android:text="Ingredients:"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ingredientList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="45dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp" />
+    </androidx.cardview.widget.CardView>
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/tbViewRecipe"
         android:layout_width="409dp"
@@ -29,4 +68,37 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tbViewRecipe" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/instructionsCard"
+        android:layout_width="450px"
+        android:layout_height="700px"
+        android:layout_marginTop="32dp"
+        android:layout_marginEnd="4dp"
+        app:cardBackgroundColor="#C9C3BD"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvRecipeName">
+
+        <TextView
+            android:id="@+id/tvInstructionsTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="Instructions:"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/instructionList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="45dp" />
+
+    </androidx.cardview.widget.CardView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -45,6 +45,22 @@ public class RecipeListFragment extends Fragment
         View recipeListLayout = inflater.inflate(R.layout.recipe_list_fragment, container, false);
         ingredients = new ArrayList<>();
         ingredients.add(new Ingredient(1, "Frozen Pizza"));
+        ingredients.add(new Ingredient(1, "Green Pepper but longer"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient(1, "Green Pepper"));
 
         instructions = new ArrayList<>();
         instructions.add(new Instruction(1, "Cook Pizza"));

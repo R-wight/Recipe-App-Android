@@ -12,4 +12,9 @@ public class Ingredient implements Serializable
         this.ingredient = ingredient;
     }
 
+    public String getIngredient()
+    {
+        return this.ingredient;
+    }
+
 }
