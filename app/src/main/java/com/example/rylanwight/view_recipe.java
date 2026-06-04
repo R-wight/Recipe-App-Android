@@ -34,6 +34,8 @@ public class view_recipe extends AppCompatActivity {
     private RecyclerView ingredientList;
     private RecyclerView.Adapter ingredientAdapter;
     private ArrayList<Instruction> instructions;
+    private RecyclerView instructionList;
+    private RecyclerView.Adapter instructionAdapter;
     private TextView recipeName;
 
     @Override
@@ -50,7 +52,7 @@ public class view_recipe extends AppCompatActivity {
         //Initialize toolbar
         Toolbar toolbar = findViewById(R.id.tbViewRecipe);
         toolbar.setTitle("Recipe Box");
-        toolbar.setBackgroundColor(Color.parseColor("#C9C3BD"));
+        //toolbar.setBackgroundColor(Color.parseColor("#C9C3BD"));
         setSupportActionBar(toolbar);
 
         //Initialize views
@@ -63,8 +65,8 @@ public class view_recipe extends AppCompatActivity {
 
         //Set views
         recipeName.setText(recipe.getName());
-        //LayoutInflater inflater;
-        //View ingredientListLayout = inflater.inflate()
+
+        //Ingredient list recycler
         ingredientList = (RecyclerView) findViewById(R.id.ingredientList);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         ingredientList.setLayoutManager(manager);
@@ -73,6 +75,67 @@ public class view_recipe extends AppCompatActivity {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(ingredientList.getContext(), manager.getOrientation());
         ingredientList.addItemDecoration(dividerItemDecoration);
 
+        //Instruction list recycler
+        instructionList = (RecyclerView) findViewById(R.id.instructionList);
+        LinearLayoutManager instrManager = new LinearLayoutManager(this);
+        instructionList.setLayoutManager(instrManager);
+        instructionAdapter = new InstructionListAdapter(this, instructions);
+        instructionList.setAdapter(instructionAdapter);
+        DividerItemDecoration dividerItemDecorationInstr = new DividerItemDecoration(instructionList.getContext(), manager.getOrientation());
+        instructionList.addItemDecoration(dividerItemDecorationInstr);
+
+    }
+
+    public class InstructionListAdapter extends RecyclerView.Adapter<InstructionListAdapter.ViewHolder>
+    {
+        private ItemClickListener mClickListener;
+        private ArrayList<Instruction> instructions;
+        private LayoutInflater mInflater;
+
+        InstructionListAdapter(Context context, ArrayList<Instruction> instructions)
+        {
+            this.mInflater = LayoutInflater.from(context);
+            this.instructions = instructions;
+            //this.mClickListener = listener;
+        }
+
+        //inflates the layout we created that will show one row of data
+        @Override
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
+        {
+            View view = mInflater.inflate(R.layout.instruction_layout, parent, false);
+            return new ViewHolder(view);
+        }
+        //binds the data to the TextView in each row
+        @Override
+        public void onBindViewHolder(ViewHolder holder, int position)
+        {
+            Instruction instruction = instructions.get(position);
+            holder.tvInstruction.setText((position + 1) + ". " + instruction.getInstruction());
+        }
+
+        //total number of rows
+        @Override
+        public int getItemCount(){ return instructions.size(); }
+        public Instruction getItem(int id){ return instructions.get(id); }
+
+        //Stores and recycles views as they are scrolled off screen
+        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
+        {
+            TextView tvInstruction;
+            public ViewHolder(View itemView)
+            {
+                super(itemView);
+                tvInstruction = itemView.findViewById(R.id.tvInstruction);
+                itemView.setOnClickListener(this); //Not sure if this will be needed
+            }
+            //Not sure if this is needed either
+            @Override
+            public void onClick(View v)
+            {
+                if (mClickListener != null) mClickListener.onItemClick(v, getAdapterPosition());
+            }
+        }
     }
 
     public class IngredientListAdapter extends RecyclerView.Adapter<IngredientListAdapter.ViewHolder>

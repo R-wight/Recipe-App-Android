@@ -42,7 +42,6 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
 
         toolbar = findViewById(R.id.tbTop);
         toolbar.setTitle("Recipe Box");
-        toolbar.setBackgroundColor(Color.parseColor("#C9C3BD"));
         //set the activities action bar to be this object
         setSupportActionBar(toolbar);
 

@@ -12,4 +12,9 @@ public class Instruction implements Serializable
         this.recipeId = recipeId;
         this.instruction = instruction;
     }
+
+    public String getInstruction()
+    {
+        return this.instruction;
+    }
 }

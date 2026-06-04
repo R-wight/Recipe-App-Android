@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E7D7C9"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -12,7 +13,8 @@
         android:id="@+id/tbTop"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="#B2967D"
+        android:elevation="24dp"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme" />
 

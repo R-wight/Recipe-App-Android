@@ -5,6 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#E7D7C9"
     tools:context=".view_recipe">
 
     <androidx.cardview.widget.CardView
@@ -14,7 +15,7 @@
         android:layout_marginTop="32dp"
         android:layout_marginEnd="236dp"
         android:maxHeight="200px"
-        app:cardBackgroundColor="#C9C3BD"
+        app:cardBackgroundColor="#ECF8F8"
         app:cardCornerRadius="15dp"
         app:cardElevation="24dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -50,7 +51,7 @@
         android:id="@+id/tbViewRecipe"
         android:layout_width="409dp"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:background="#B2967D"
         android:minHeight="?attr/actionBarSize"
         android:theme="?attr/actionBarTheme"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +76,7 @@
         android:layout_height="700px"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="4dp"
-        app:cardBackgroundColor="#C9C3BD"
+        app:cardBackgroundColor="#ECF8F8"
         app:cardCornerRadius="15dp"
         app:cardElevation="24dp"
         app:layout_constraintEnd_toEndOf="parent"
