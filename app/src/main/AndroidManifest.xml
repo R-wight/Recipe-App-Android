@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RylanWight">
         <activity
+            android:name=".new_recipe"
+            android:exported="false" />
+        <activity
             android:name=".view_recipe"
             android:exported="false" />
         <activity

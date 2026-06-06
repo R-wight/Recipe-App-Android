@@ -68,7 +68,9 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
         }
         else //New recipe was clicked
         {
-            Toast.makeText(this, "New Recipe", Toast.LENGTH_LONG).show();
+            //Toast.makeText(this, "New Recipe", Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, new_recipe.class);
+            this.startActivity(intent);
         }
         return true;
     }

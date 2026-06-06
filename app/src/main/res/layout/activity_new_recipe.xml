@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#E7D7C9"
+    tools:context=".new_recipe">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tbNewRecipe"
+        android:layout_width="409dp"
+        android:layout_height="wrap_content"
+        android:background="#B2967D"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvNewRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="New Recipe"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tbNewRecipe" />
+
+    <TextView
+        android:id="@+id/lblRecipeName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:text="Recipe Name"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvNewRecipe" />
+
+    <EditText
+        android:id="@+id/etRecipeName"
+        style="@style/Widget.AppCompat.EditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="Chocolate Chip Cookies"
+        android:inputType="text"
+        app:layout_constraintBottom_toBottomOf="@+id/lblRecipeName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/lblRecipeName"
+        app:layout_constraintTop_toTopOf="@+id/lblRecipeName" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ingredientCard"
+        android:layout_width="500px"
+        android:layout_height="450px"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="32dp"
+        app:cardBackgroundColor="#ECF8F8"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/lblRecipeName">
+
+        <TextView
+            android:id="@+id/lblIngredients"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="Ingredients:"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/etIngredient"
+            android:layout_width="400px"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="45dp"
+            android:layout_marginBottom="15dp"
+            android:ems="10"
+            android:hint="1 Cup Flour"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btnAddIngredient"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="95dp"
+            android:layout_marginBottom="15dp"
+            android:text="Add Ingredient" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/instructionCard"
+        android:layout_width="500px"
+        android:layout_height="450px"
+        android:layout_marginEnd="8dp"
+        app:cardBackgroundColor="#ECF8F8"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ingredientCard">
+
+        <TextView
+            android:id="@+id/lblInstructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="15dp"
+            android:text="Instructions:"
+            android:textSize="16sp" />
+
+        <EditText
+            android:id="@+id/editTextText"
+            android:layout_width="400px"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="45dp"
+            android:layout_marginBottom="15dp"
+            android:ems="10"
+            android:hint="Add Chocolate..."
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btnAddInstruction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="95dp"
+            android:layout_marginBottom="15dp"
+            android:text="Add Instruction" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/ingredientsListCard"
+        android:layout_width="500px"
+        android:layout_height="500px"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:cardBackgroundColor="#ECF8F8"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="24dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ingredientCard">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ingredientsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp" />
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="500px"
+        android:layout_height="500px"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        app:cardBackgroundColor="#ECF8F8"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/instructionCard">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/instructionsList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="15dp" />
+    </androidx.cardview.widget.CardView>
+
+    <ImageView
+        android:id="@+id/imgRecipe"
+        android:layout_width="200px"
+        android:layout_height="200px"
+        android:layout_marginStart="120dp"
+        android:layout_marginTop="15dp"
+        android:maxWidth="300px"
+        android:maxHeight="300px"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ingredientsListCard"
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
+
+    <Button
+        android:id="@+id/btnAddImg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:text="Add Image"
+        app:layout_constraintBottom_toBottomOf="@+id/imgRecipe"
+        app:layout_constraintStart_toEndOf="@+id/imgRecipe"
+        app:layout_constraintTop_toTopOf="@+id/imgRecipe" />
+
+    <Button
+        android:id="@+id/btnSaveRecipe"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:text="Save Recipe"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
