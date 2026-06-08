@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
         if(item.getItemId() == R.id.mnuViewRecipes)
         {
             //Toast.makeText(this, "View Recipes", Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, view_recipe.class); // this is the activity that we want to start
+            Intent intent = new Intent(this, MainActivity.class); // this is the activity that we want to start
             this.startActivity(intent);
 
         }
