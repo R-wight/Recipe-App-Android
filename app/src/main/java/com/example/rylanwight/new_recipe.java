@@ -65,7 +65,6 @@ public class new_recipe extends AppCompatActivity {
         //Initialize toolbar
         Toolbar toolbar = findViewById(R.id.tbNewRecipe);
         toolbar.setTitle("Recipe Box");
-        //toolbar.setBackgroundColor(Color.parseColor("#C9C3BD"));
         setSupportActionBar(toolbar);
 
         //Edit Texts
