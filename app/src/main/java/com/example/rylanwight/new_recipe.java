@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -192,6 +193,7 @@ public class new_recipe extends AppCompatActivity {
             public void onClick(View v)
             {
                 if (mClickListener != null) mClickListener.onItemClick(v, getAdapterPosition());
+                Toast.makeText(v.getContext(), "View Recipes", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -222,6 +224,9 @@ public class new_recipe extends AppCompatActivity {
         {
             Ingredient ingredient = ingredients.get(position);
             holder.tvIngredient.setText((position + 1) + ". " + ingredient.getIngredient());
+            holder.delBtn.setOnClickListener(v -> {
+                instructions.remove(holder.getAdapterPosition() + 1);
+            });
         }
 
         //total number of rows
@@ -233,10 +238,12 @@ public class new_recipe extends AppCompatActivity {
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
         {
             TextView tvIngredient;
+            ImageButton delBtn;
             public ViewHolder(View itemView)
             {
                 super(itemView);
                 tvIngredient = itemView.findViewById(R.id.tvIngredient);
+                delBtn = itemView.findViewById(R.id.btnIngDelete);
                 itemView.setOnClickListener(this); //Not sure if this will be needed
             }
             //Not sure if this is needed either
