@@ -26,6 +26,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
+/**
+ *
+ * I think we should just add ingredients and instructions to the list, when save is clicked create a recipe in the db then get that id
+ * and loop through the ingredients and set the id, we may need to add a setter for id in those objects
+ *
+ *
+ */
 public class new_recipe extends AppCompatActivity {
 
     private Recipe recipe;
@@ -122,6 +129,9 @@ public class new_recipe extends AppCompatActivity {
         etInstruction.setText("");
     }
 
+    /**
+     * Maybe change this to cancel?
+     */
     public void clearRecipe()
     {
         ingredients.clear();

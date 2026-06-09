@@ -8,6 +8,7 @@ public class Recipe implements Serializable
     //Need to add boolean for favorites eventually
     private long ID;
     private String name;
+    private boolean isFavorite;
     private ArrayList<Ingredient> ingredients;
     private ArrayList<Instruction> instructions;
 
@@ -15,6 +16,7 @@ public class Recipe implements Serializable
     {
         this.ID = -1;
         this.name = name;
+        this.isFavorite = false;
         this.ingredients = ingredients;
         this.instructions = instructions;
     }
@@ -41,5 +43,13 @@ public class Recipe implements Serializable
     public void setID(long ID)
     {
         this.ID = ID;
+    }
+    public int isFavorite()
+    {
+        return this.isFavorite ? 1 : 0;
+    }
+    public void setFavorite(boolean bVal)
+    {
+        this.isFavorite = bVal;
     }
 }

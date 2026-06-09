@@ -43,6 +43,7 @@ dependencies {
     implementation(libs.fragment)
     implementation(libs.material)
     implementation(libs.recyclerview)
+    implementation(libs.viewpager2)
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)

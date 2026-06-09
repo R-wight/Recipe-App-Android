@@ -30,8 +30,13 @@ public class IngredientDBHelper extends SQLiteOpenHelper
                 ID + " integer primary key autoincrement, " +
                 RECIPE_ID + " integer not null, " +
                 INGREDIENT + " text not null, " +
-                "FOREIGN KEY(" + RECIPE_ID + ") REFERENCES Recipes(" + ID + ")"; // db.execSQL("PRAGMA foreign_keys=ON;"); need this in the onOpen method
+                "FOREIGN KEY(" + RECIPE_ID + ") REFERENCES Recipes(" + ID + "));"; // db.execSQL("PRAGMA foreign_keys=ON;"); need this in the onOpen method
         db.execSQL(sCreate);
+    }
+    @Override
+    public void onOpen(SQLiteDatabase db)
+    {
+        db.execSQL("PRAGMA foreign_keys=ON;");
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.example.rylanwight;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Debug;
 import android.view.LayoutInflater;
@@ -25,6 +26,8 @@ public class RecipeListFragment extends Fragment
     private ArrayList<Ingredient> ingredients;
     private ArrayList<Instruction> instructions;
     private RecipeSelectedListener listener;
+    private RecipeDBHelper recipeDB;
+    private Cursor recipeCursor;
 
 
     public void setRecipeSelectedListener(RecipeSelectedListener listener)
@@ -42,6 +45,29 @@ public class RecipeListFragment extends Fragment
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
+        recipeDB = new RecipeDBHelper(getContext());
+        recipes = new ArrayList<>();
+        ArrayList<Ingredient> ingredients2 = new ArrayList<Ingredient>();
+        ingredients2.add(new Ingredient(2, "Chicken"));
+
+        ArrayList<Instruction> instructions2 = new ArrayList<>();
+        instructions2.add(new Instruction(2, "Cook chicken"));
+
+        //DATABASE
+        recipeDB.open();
+        recipeCursor = recipeDB.getAllRecipes();
+        if(recipeCursor.moveToFirst())
+        {
+            do
+            {
+                    recipes.add(new Recipe(recipeCursor.getString(1), ingredients2, instructions2));
+            }
+            while(recipeCursor.moveToNext());
+        }
+        recipeDB.close();
+
+
+
         View recipeListLayout = inflater.inflate(R.layout.recipe_list_fragment, container, false);
         ingredients = new ArrayList<>();
         ingredients.add(new Ingredient(1, "Frozen Pizza"));
@@ -65,23 +91,19 @@ public class RecipeListFragment extends Fragment
         instructions = new ArrayList<>();
         instructions.add(new Instruction(1, "Cook Pizza"));
 
-        ArrayList<Ingredient> ingredients2 = new ArrayList<Ingredient>();
-        ingredients2.add(new Ingredient(2, "Chicken"));
 
-        ArrayList<Instruction> instructions2 = new ArrayList<>();
-        instructions2.add(new Instruction(2, "Cook chicken"));
 
-        recipes = new ArrayList<>();
-        recipes.add(new Recipe(
-                "Pizza",
-                ingredients,
-                instructions
-        ));
-        recipes.add(new Recipe(
-                "Chicken",
-                ingredients2,
-                instructions2
-        ));
+
+//        recipes.add(new Recipe(
+//                "Pizza",
+//                ingredients,
+//                instructions
+//        ));
+//        recipes.add(new Recipe(
+//                "Chicken",
+//                ingredients2,
+//                instructions2
+//        ));
         recipeList = (RecyclerView) recipeListLayout.findViewById(R.id.recipeList);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recipeList.setLayoutManager(manager);
