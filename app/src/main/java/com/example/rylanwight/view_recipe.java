@@ -4,6 +4,7 @@ import static java.security.AccessController.getContext;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 public class view_recipe extends AppCompatActivity {
 
     private Recipe recipe;
+    private RecipeDBHelper recipeDB;
     private ArrayList<Ingredient> ingredients;
     private RecyclerView ingredientList;
     private RecyclerView.Adapter ingredientAdapter;
@@ -37,7 +40,7 @@ public class view_recipe extends AppCompatActivity {
     private RecyclerView instructionList;
     private RecyclerView.Adapter instructionAdapter;
     private TextView recipeName;
-
+    private Button btnDel;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,13 +58,25 @@ public class view_recipe extends AppCompatActivity {
         //toolbar.setBackgroundColor(Color.parseColor("#C9C3BD"));
         setSupportActionBar(toolbar);
 
+        //Database
+        recipeDB = new RecipeDBHelper(this);
+
         //Initialize views
         recipeName = findViewById(R.id.tvRecipeName);
 
         //Current Recipe
-        recipe = (Recipe) getIntent().getSerializableExtra("recipe");
-        ingredients = recipe.getIngredients();
-        instructions = recipe.getInstructions();
+        long recipeID = getIntent().getLongExtra("recipe", 0);
+        //recipe = (Recipe) getIntent().getSerializableExtra("recipe");
+        recipe = getRecipe(recipeID);
+        recipe.setID(recipeID);
+        ingredients = new ArrayList<>();
+        instructions = new ArrayList<>();
+        getIngredients();
+        getInstructions();
+        recipe.setInstructions(instructions);
+        recipe.setIngredients(ingredients);
+//        ingredients = recipeDB.getAllIngredients();
+//        instructions = recipe.getInstructions();
 
         //Set views
         recipeName.setText(recipe.getName());
@@ -84,6 +99,60 @@ public class view_recipe extends AppCompatActivity {
         DividerItemDecoration dividerItemDecorationInstr = new DividerItemDecoration(instructionList.getContext(), manager.getOrientation());
         instructionList.addItemDecoration(dividerItemDecorationInstr);
 
+        //DELETE BUTTON
+        btnDel = findViewById(R.id.btnDelete);
+        btnDel.setOnClickListener(v -> deleteRecipe());
+
+    }
+
+    public void deleteRecipe()
+    {
+        recipeDB.open();
+        recipeDB.deleteRecipe(recipe);
+        recipeDB.close();
+        Intent intent = new Intent();
+        setResult(5, intent);
+        finish();
+    }
+    public Recipe getRecipe(long id)
+    {
+        recipeDB.open();
+        Cursor cursor = recipeDB.getRecipe(id);
+        //cursor.moveToNext();
+        Recipe recipe = new Recipe(cursor.getString(1));
+        cursor.close();
+        recipeDB.close();
+        return recipe;
+    }
+
+    public void getIngredients()
+    {
+        recipeDB.open();
+        Cursor cursor = recipeDB.getAllIngredients(recipe);
+        if(cursor != null & cursor.moveToFirst()) {
+            do {
+                ingredients.add(new Ingredient(cursor.getLong(0), cursor.getLong(1), cursor.getString(2)));
+            }
+            while (cursor.moveToNext());
+        }
+        cursor.close();
+        recipeDB.close();
+    }
+
+    public void getInstructions()
+    {
+        recipeDB.open();
+        Cursor cursor = recipeDB.getAllInstructions(recipe);
+        if(cursor != null & cursor.moveToFirst())
+        {
+            do
+            {
+                instructions.add(new Instruction(cursor.getLong(0), cursor.getLong(1), cursor.getString(2)));
+            }
+            while(cursor.moveToNext());
+        }
+        cursor.close();
+        recipeDB.close();
     }
 
     public class InstructionListAdapter extends RecyclerView.Adapter<InstructionListAdapter.ViewHolder>
@@ -103,7 +172,7 @@ public class view_recipe extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
         {
-            View view = mInflater.inflate(R.layout.instruction_layout, parent, false);
+            View view = mInflater.inflate(R.layout.instruction_layout_view_recipe, parent, false);
             return new ViewHolder(view);
         }
         //binds the data to the TextView in each row
@@ -155,7 +224,7 @@ public class view_recipe extends AppCompatActivity {
         @Override
         public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
         {
-            View view = mInflater.inflate(R.layout.ingredient_layout, parent, false);
+            View view = mInflater.inflate(R.layout.ingredient_layout_view_recipe, parent, false);
             return new ViewHolder(view);
         }
         //binds the data to the TextView in each row
@@ -203,14 +272,12 @@ public class view_recipe extends AppCompatActivity {
     {
         if(item.getItemId() == R.id.mnuViewRecipes)
         {
-            //Toast.makeText(this, "View Recipes", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class); // this is the activity that we want to start
             this.startActivity(intent);
 
         }
         else //New recipe was clicked
         {
-            //Toast.makeText(this, "New Recipe", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, new_recipe.class);
             this.startActivity(intent);
         }

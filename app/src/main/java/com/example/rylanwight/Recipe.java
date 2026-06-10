@@ -21,6 +21,15 @@ public class Recipe implements Serializable
         this.instructions = instructions;
     }
 
+    public Recipe(String name)
+    {
+        this.ID = -1;
+        this.name = name;
+        this.isFavorite = false;
+        this.ingredients = null;
+        this.instructions = null;
+    }
+
     public String getName()
     {
         return this.name;
@@ -51,5 +60,13 @@ public class Recipe implements Serializable
     public void setFavorite(boolean bVal)
     {
         this.isFavorite = bVal;
+    }
+    public void setIngredients(ArrayList<Ingredient> obList)
+    {
+        this.ingredients = obList;
+    }
+    public void setInstructions(ArrayList<Instruction> obList)
+    {
+        this.instructions = obList;
     }
 }

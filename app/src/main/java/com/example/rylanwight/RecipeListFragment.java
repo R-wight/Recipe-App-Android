@@ -47,11 +47,6 @@ public class RecipeListFragment extends Fragment
     {
         recipeDB = new RecipeDBHelper(getContext());
         recipes = new ArrayList<>();
-        ArrayList<Ingredient> ingredients2 = new ArrayList<Ingredient>();
-        ingredients2.add(new Ingredient(2, "Chicken"));
-
-        ArrayList<Instruction> instructions2 = new ArrayList<>();
-        instructions2.add(new Instruction(2, "Cook chicken"));
 
         //DATABASE
         recipeDB.open();
@@ -60,50 +55,16 @@ public class RecipeListFragment extends Fragment
         {
             do
             {
-                    recipes.add(new Recipe(recipeCursor.getString(1), ingredients2, instructions2));
+                Recipe recipe = new Recipe(recipeCursor.getString(1));
+                recipe.setID(recipeCursor.getLong(0));
+                recipes.add(recipe);
             }
             while(recipeCursor.moveToNext());
         }
         recipeDB.close();
 
-
-
         View recipeListLayout = inflater.inflate(R.layout.recipe_list_fragment, container, false);
-        ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient(1, "Frozen Pizza"));
-        ingredients.add(new Ingredient(1, "Green Pepper but longer"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
 
-        instructions = new ArrayList<>();
-        instructions.add(new Instruction(1, "Cook Pizza"));
-
-
-
-
-//        recipes.add(new Recipe(
-//                "Pizza",
-//                ingredients,
-//                instructions
-//        ));
-//        recipes.add(new Recipe(
-//                "Chicken",
-//                ingredients2,
-//                instructions2
-//        ));
         recipeList = (RecyclerView) recipeListLayout.findViewById(R.id.recipeList);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recipeList.setLayoutManager(manager);
@@ -112,11 +73,12 @@ public class RecipeListFragment extends Fragment
             public void onItemClick(View view, int position)
             {
 
-                Toast.makeText(getContext(), recipes.get(position).getName(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), recipes.get(position).getID() + "", Toast.LENGTH_SHORT).show();
                 //View the recipe and pass information
                 Intent intent = new Intent(view.getContext(), view_recipe.class); // this is the activity that we want to start
-                intent.putExtra("recipe", recipes.get(position));
-                view.getContext().startActivity(intent);
+                intent.putExtra("recipe", recipes.get(position).getID());
+                //view.getContext().startActivity(intent);
+                startActivityForResult(intent, 1);
 
             }
         });
@@ -125,7 +87,37 @@ public class RecipeListFragment extends Fragment
         recipeList.addItemDecoration(dividerItemDecoration);
         return recipeListLayout;
     }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1)
+        {
+            if(resultCode == 5)
+            {
+                refreshRecipes();
+            }
+        }
+    }
 
+    public void refreshRecipes()
+    {
+        recipes.clear();
+        recipeDB.open();
+        recipeCursor = recipeDB.getAllRecipes();
+        if(recipeCursor.moveToFirst())
+        {
+            do
+            {
+                Recipe recipe = new Recipe(recipeCursor.getString(1));
+                recipe.setID(recipeCursor.getLong(0));
+                recipes.add(recipe);
+            }
+            while(recipeCursor.moveToNext());
+        }
+        recipeDB.close();
+        recipeAdapter.notifyDataSetChanged();
+    }
     public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder>
     {
         private ItemClickListener mClickListener;

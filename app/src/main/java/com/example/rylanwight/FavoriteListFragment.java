@@ -47,10 +47,10 @@ public class FavoriteListFragment extends Fragment
         recipeDB = new RecipeDBHelper(getContext());
         recipes = new ArrayList<>();
         ArrayList<Ingredient> ingredients2 = new ArrayList<Ingredient>();
-        ingredients2.add(new Ingredient(2, "Chicken"));
+        ingredients2.add(new Ingredient( "Chicken"));
 
         ArrayList<Instruction> instructions2 = new ArrayList<>();
-        instructions2.add(new Instruction(2, "Cook chicken"));
+        instructions2.add(new Instruction( "Cook chicken"));
 
         //DATABASE
         recipeDB.open();
@@ -59,7 +59,9 @@ public class FavoriteListFragment extends Fragment
         {
             do
             {
-                recipes.add(new Recipe(recipeCursor.getString(1), ingredients2, instructions2));
+                Recipe recipe = new Recipe(recipeCursor.getString(1), ingredients2, instructions2);
+                recipe.setID(recipeCursor.getLong(0));
+                recipes.add(recipe);
             }
             while(recipeCursor.moveToNext());
         }
@@ -69,26 +71,26 @@ public class FavoriteListFragment extends Fragment
 
         View recipeListLayout = inflater.inflate(R.layout.recipe_list_fragment, container, false);
         ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient(1, "Frozen Pizza"));
-        ingredients.add(new Ingredient(1, "Green Pepper but longer"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
-        ingredients.add(new Ingredient(1, "Green Pepper"));
+        ingredients.add(new Ingredient( "Frozen Pizza"));
+        ingredients.add(new Ingredient( "Green Pepper but longer"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
+        ingredients.add(new Ingredient( "Green Pepper"));
 
         instructions = new ArrayList<>();
-        instructions.add(new Instruction(1, "Cook Pizza"));
+        instructions.add(new Instruction( "Cook Pizza"));
 
 
 

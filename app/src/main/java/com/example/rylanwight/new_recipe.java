@@ -37,6 +37,7 @@ import java.util.ArrayList;
 public class new_recipe extends AppCompatActivity {
 
     private Recipe recipe;
+    private RecipeDBHelper recipeDB;
     private ArrayList<Ingredient> ingredients;
     private RecyclerView ingredientList;
     private RecyclerView.Adapter ingredientAdapter;
@@ -50,6 +51,7 @@ public class new_recipe extends AppCompatActivity {
     private Button btnAddIngredient;
     private Button btnAddInstruction;
     private Button btnClear;
+    private Button btnSave;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class new_recipe extends AppCompatActivity {
         btnAddIngredient = findViewById(R.id.btnAddIngredient);
         btnAddInstruction = findViewById(R.id.btnAddInstruction);
         btnClear = findViewById(R.id.btnClear);
+        btnSave = findViewById(R.id.btnSaveRecipe);
 
         //Initialize toolbar
         Toolbar toolbar = findViewById(R.id.tbNewRecipe);
@@ -102,10 +105,62 @@ public class new_recipe extends AppCompatActivity {
         btnAddIngredient.setOnClickListener(v -> addIngredient());
         btnAddInstruction.setOnClickListener(v -> addInstruction());
         btnClear.setOnClickListener(v -> clearRecipe());
+        btnSave.setOnClickListener(v -> saveRecipe());
+
+        //Database
+        recipeDB = new RecipeDBHelper(this);
 
     }
 
 
+    public void saveRecipe()
+    {
+        recipe = new Recipe(etTitle.getText().toString(), new ArrayList<>(), new ArrayList());
+        recipeDB.open();
+        recipeDB.createRecipe(recipe);
+        updateIngredientsWithRecipeID();
+        updateInstructionsWithRecipeID();
+        recipe.setIngredients(ingredients);
+        recipe.setInstructions(instructions);
+        recipeDB.updateRecipe(recipe);
+        saveIngredient();
+        saveInstruction();
+        recipeDB.close();
+        Intent intent = new Intent();
+        setResult(5, intent);
+        finish();
+    }
+
+    public void saveIngredient()
+    {
+        for(Ingredient ingredient : ingredients)
+        {
+            recipeDB.createIngredient(ingredient);
+        }
+    }
+
+    public void saveInstruction()
+    {
+        for(Instruction instruction : instructions)
+        {
+            recipeDB.createInstruction(instruction);
+        }
+    }
+    public void updateIngredientsWithRecipeID()
+    {
+        for(Ingredient ingredient : ingredients)
+        {
+            ingredient.setRecipeId(recipe.getID());
+        }
+    }
+
+    public void updateInstructionsWithRecipeID()
+    {
+        for(Instruction instruction : instructions)
+        {
+            instruction.setRecipeId(recipe.getID());
+        }
+    }
     public void addIngredient()
     {
         if(etIngredient.getText().toString().trim().equals(""))
@@ -113,7 +168,7 @@ public class new_recipe extends AppCompatActivity {
             Toast.makeText(this, "Ingredient field was left empty!", Toast.LENGTH_SHORT).show();
             return;
         }
-        ingredients.add(new Ingredient(4, etIngredient.getText().toString()));
+        ingredients.add(new Ingredient( etIngredient.getText().toString()));
         ingredientAdapter.notifyDataSetChanged();
         etIngredient.setText("");
     }
@@ -125,7 +180,7 @@ public class new_recipe extends AppCompatActivity {
             Toast.makeText(this, "Instruction field was left empty!", Toast.LENGTH_SHORT).show();
             return;
         }
-        instructions.add(new Instruction(4, etInstruction.getText().toString()));
+        instructions.add(new Instruction(etInstruction.getText().toString()));
         instructionAdapter.notifyDataSetChanged();
         etInstruction.setText("");
     }
@@ -135,13 +190,7 @@ public class new_recipe extends AppCompatActivity {
      */
     public void clearRecipe()
     {
-        ingredients.clear();
-        instructions.clear();
-        ingredientAdapter.notifyDataSetChanged();
-        instructionAdapter.notifyDataSetChanged();
-        etIngredient.setText("");
-        etInstruction.setText("");
-        etTitle.setText("");
+        finish();
     }
 
     //BELOW IS FOR RECYCLERS
@@ -171,6 +220,12 @@ public class new_recipe extends AppCompatActivity {
         {
             Instruction instruction = instructions.get(position);
             holder.tvInstruction.setText((position + 1) + ". " + instruction.getInstruction());
+            holder.delBtn.setOnClickListener(v -> {
+                int currentPosition = holder.getAdapterPosition();
+                instructions.remove(currentPosition);
+                notifyItemRemoved(currentPosition);
+                notifyItemRangeChanged(currentPosition, instructions.size());
+            });
         }
 
         //total number of rows
@@ -182,10 +237,12 @@ public class new_recipe extends AppCompatActivity {
         public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener
         {
             TextView tvInstruction;
+            ImageButton delBtn;
             public ViewHolder(View itemView)
             {
                 super(itemView);
                 tvInstruction = itemView.findViewById(R.id.tvInstruction);
+                delBtn = itemView.findViewById(R.id.btnInsDelete);
                 itemView.setOnClickListener(this); //Not sure if this will be needed
             }
             //Not sure if this is needed either
@@ -225,7 +282,10 @@ public class new_recipe extends AppCompatActivity {
             Ingredient ingredient = ingredients.get(position);
             holder.tvIngredient.setText((position + 1) + ". " + ingredient.getIngredient());
             holder.delBtn.setOnClickListener(v -> {
-                instructions.remove(holder.getAdapterPosition() + 1);
+                int currentPosition = holder.getAdapterPosition();
+                ingredients.remove(currentPosition);
+                notifyItemRemoved(currentPosition);
+                notifyItemRangeChanged(currentPosition, ingredients.size());
             });
         }
 

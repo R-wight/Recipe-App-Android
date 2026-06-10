@@ -62,29 +62,29 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
             return insets;
         });
         ingredients1 = new ArrayList<Ingredient>();
-        ingredients1.add(new Ingredient(1, "Spaghetti"));
+        ingredients1.add(new Ingredient( "Spaghetti"));
         instructions1 = new ArrayList<>();
-        instructions1.add(new Instruction(1, "Boil Pasta"));
+        instructions1.add(new Instruction( "Boil Pasta"));
         ingredients2 = new ArrayList<Ingredient>();
-        ingredients2.add(new Ingredient(2, "T-bone"));
+        ingredients2.add(new Ingredient( "T-bone"));
         instructions2 = new ArrayList<>();
-        instructions2.add(new Instruction(2, "Turn on grill"));
+        instructions2.add(new Instruction("Turn on grill"));
 
         toolbar = findViewById(R.id.tbTop);
         toolbar.setTitle("Recipe Box");
         //set the activities action bar to be this object
         setSupportActionBar(toolbar);
-        Recipe recipe3 = new Recipe("Pizza", ingredients1, instructions1);
-        recipe3.setFavorite(true);
+        //Recipe recipe3 = new Recipe("Pizza", ingredients1, instructions1);
+        //recipe3.setFavorite(true);
 
         //DATABASE
         recipeDB = new RecipeDBHelper(this);
-        recipeDB.open();
-        recipeDB.onUpgrade(recipeDB.sqlDB, 0, 1);
-        recipeDB.createRecipe(new Recipe("Pasta", ingredients1, instructions1));
-        recipeDB.createRecipe(new Recipe("Steak", ingredients2, instructions2));
-        recipeDB.createRecipe(recipe3);
-        recipeDB.close();
+//        recipeDB.open();
+//        //recipeDB.onUpgrade(recipeDB.sqlDB, 0, 1);
+//        recipeDB.createRecipe(new Recipe("Pasta", ingredients1, instructions1));
+//        recipeDB.createRecipe(new Recipe("Steak", ingredients2, instructions2));
+//        recipeDB.createRecipe(recipe3);
+//        recipeDB.close();
 
         recipeDB.open();
         recipeCursor = recipeDB.getAllRecipes();
@@ -169,7 +169,8 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
         {
             //Toast.makeText(this, "New Recipe", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, new_recipe.class);
-            this.startActivity(intent);
+            //this.startActivity(intent);
+            this.startActivityForResult(intent, 1);
         }
         return true;
     }
@@ -181,5 +182,38 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
         //Intent intent = new Intent(this, DetailActivity.class);
         //intent.putExtra("course", course);
         //this.startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1)
+        {
+            if(resultCode == 5) //Recipe Created
+            {
+                adapter = new FragmentStateAdapter(this) {
+                    @NonNull
+                    @Override
+                    public Fragment createFragment(int position) {
+                        switch(position)
+                        {
+                            case 0:
+                                return new RecipeListFragment();
+                            case 1:
+                                return new FavoriteListFragment();
+                            default:
+                                return new RecipeListFragment();
+                        }
+                    };
+
+                    @Override
+                    public int getItemCount() {
+                        return 2;
+                    }
+                };
+                viewPager.setAdapter(adapter);
+            }
+        }
     }
 }
