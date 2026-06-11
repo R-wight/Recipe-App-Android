@@ -61,6 +61,10 @@ public class Recipe implements Serializable
     {
         this.isFavorite = bVal;
     }
+    public boolean getFavorite()
+    {
+        return this.isFavorite;
+    }
     public void setIngredients(ArrayList<Ingredient> obList)
     {
         this.ingredients = obList;

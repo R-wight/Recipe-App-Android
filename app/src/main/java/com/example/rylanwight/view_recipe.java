@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ public class view_recipe extends AppCompatActivity {
     private RecyclerView.Adapter instructionAdapter;
     private TextView recipeName;
     private Button btnDel;
+    private ImageButton btnFav;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +71,7 @@ public class view_recipe extends AppCompatActivity {
         //recipe = (Recipe) getIntent().getSerializableExtra("recipe");
         recipe = getRecipe(recipeID);
         recipe.setID(recipeID);
+        recipe.setFavorite(isFavorite(recipeID));
         ingredients = new ArrayList<>();
         instructions = new ArrayList<>();
         getIngredients();
@@ -102,6 +105,17 @@ public class view_recipe extends AppCompatActivity {
         //DELETE BUTTON
         btnDel = findViewById(R.id.btnDelete);
         btnDel.setOnClickListener(v -> deleteRecipe());
+        btnFav = findViewById(R.id.btnFavorite);
+        btnFav.setOnClickListener(v -> updateRecipe(recipe));
+        if (recipe.getFavorite())
+        {
+            btnFav.setImageResource(android.R.drawable.btn_star_big_on);
+        }
+        else
+        {
+            btnFav.setImageResource(android.R.drawable.btn_star_big_off);
+        }
+
 
     }
 
@@ -114,6 +128,21 @@ public class view_recipe extends AppCompatActivity {
         setResult(5, intent);
         finish();
     }
+    public void updateRecipe(Recipe recipe)
+    {
+        recipe.setFavorite(!recipe.getFavorite());
+        recipeDB.open();
+        recipeDB.updateRecipe(recipe);
+        recipeDB.close();
+        if (recipe.getFavorite())
+        {
+            btnFav.setImageResource(android.R.drawable.btn_star_big_on);
+        }
+        else
+        {
+            btnFav.setImageResource(android.R.drawable.btn_star_big_off);
+        }
+    }
     public Recipe getRecipe(long id)
     {
         recipeDB.open();
@@ -125,6 +154,12 @@ public class view_recipe extends AppCompatActivity {
         return recipe;
     }
 
+    public Boolean isFavorite(long id)
+    {
+        recipeDB.open();
+        Cursor cursor = recipeDB.getRecipe(id);
+        return cursor.getInt(2) == 1;
+    }
     public void getIngredients()
     {
         recipeDB.open();

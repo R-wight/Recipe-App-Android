@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -70,41 +71,7 @@ public class FavoriteListFragment extends Fragment
 
 
         View recipeListLayout = inflater.inflate(R.layout.recipe_list_fragment, container, false);
-        ingredients = new ArrayList<>();
-        ingredients.add(new Ingredient( "Frozen Pizza"));
-        ingredients.add(new Ingredient( "Green Pepper but longer"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
-        ingredients.add(new Ingredient( "Green Pepper"));
 
-        instructions = new ArrayList<>();
-        instructions.add(new Instruction( "Cook Pizza"));
-
-
-
-
-//        recipes.add(new Recipe(
-//                "Pizza",
-//                ingredients,
-//                instructions
-//        ));
-//        recipes.add(new Recipe(
-//                "Chicken",
-//                ingredients2,
-//                instructions2
-//        ));
         recipeList = (RecyclerView) recipeListLayout.findViewById(R.id.recipeList);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         recipeList.setLayoutManager(manager);

@@ -8,15 +8,18 @@ import android.os.Debug;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class RecipeListFragment extends Fragment
 {
@@ -57,6 +60,7 @@ public class RecipeListFragment extends Fragment
             {
                 Recipe recipe = new Recipe(recipeCursor.getString(1));
                 recipe.setID(recipeCursor.getLong(0));
+                recipe.setFavorite(recipeCursor.getInt(1) == 1);
                 recipes.add(recipe);
             }
             while(recipeCursor.moveToNext());
@@ -87,6 +91,7 @@ public class RecipeListFragment extends Fragment
         recipeList.addItemDecoration(dividerItemDecoration);
         return recipeListLayout;
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -111,12 +116,20 @@ public class RecipeListFragment extends Fragment
             {
                 Recipe recipe = new Recipe(recipeCursor.getString(1));
                 recipe.setID(recipeCursor.getLong(0));
+                recipe.setFavorite(recipeCursor.getInt(1) == 1);
                 recipes.add(recipe);
             }
             while(recipeCursor.moveToNext());
         }
         recipeDB.close();
         recipeAdapter.notifyDataSetChanged();
+    }
+
+    public void updateFavorite(Recipe recipe)
+    {
+        recipeDB.open();
+        recipeDB.updateRecipe(recipe);
+        recipeDB.close();
     }
     public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder>
     {
@@ -145,6 +158,13 @@ public class RecipeListFragment extends Fragment
         {
             Recipe recipe = recipes.get(position);
             holder.tvRecipe.setText(recipe.getName());
+
+        }
+        public void setRecipes(List<Recipe> newRecipes)
+        {
+            this.recipes.clear();
+            this.recipes.addAll(newRecipes);
+            notifyDataSetChanged();
         }
 
         //total number of rows
