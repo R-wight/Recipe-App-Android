@@ -122,7 +122,7 @@ public class RecipeDBHelper extends SQLiteOpenHelper
             cvs.put("recipe_id", instruction.getRecipeID());
             cvs.put("instruction", instruction.getInstruction());
 
-            return sqlDB.update("instructions", cvs, ID + " = " + instruction.getID(), null) > 0;
+            return sqlDB.update("instructions", cvs, "_id = " + instruction.getID(), null) > 0;
         }
     }
 
@@ -135,10 +135,10 @@ public class RecipeDBHelper extends SQLiteOpenHelper
         else
         {
             ContentValues cvs = new ContentValues();
-            cvs.put("recipe_name", ingredient.getRecipeId());
+            cvs.put("recipe_id", ingredient.getRecipeId());
             cvs.put("ingredient", ingredient.getIngredient());
 
-            return sqlDB.update("ingredients", cvs, ID + " = " + ingredient.getID(), null) > 0;
+            return sqlDB.update("ingredients", cvs, "_id = " + ingredient.getID(), null) > 0;
         }
     }
 
@@ -149,14 +149,14 @@ public class RecipeDBHelper extends SQLiteOpenHelper
         return sqlDB.delete(TABLE_NAME, ID + " = " + recipe.getID(), null) > 0;
     }
 
-    public boolean deleteInstruction(Instruction instruction)
+    public boolean deleteInstructions(Recipe recipe)
     {
-        return sqlDB.delete("instructions", ID + " = " + instruction.getID(), null) > 0;
+        return sqlDB.delete("instructions", "recipe_id = " + recipe.getID(), null) > 0;
     }
 
-    public boolean deleteIngredient(Ingredient ingredient)
+    public boolean deleteIngredients(Recipe recipe)
     {
-        return sqlDB.delete("ingredients", ID + " = " + ingredient.getID(), null) > 0;
+        return sqlDB.delete("ingredients", "recipe_id = " + recipe.getID(), null) > 0;
     }
 
     public Cursor getAllRecipes()

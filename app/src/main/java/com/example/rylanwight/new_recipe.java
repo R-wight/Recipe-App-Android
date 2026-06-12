@@ -2,6 +2,7 @@ package com.example.rylanwight;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -66,6 +67,8 @@ public class new_recipe extends AppCompatActivity {
     private ImageView userImage;
     private Uri imageUri;
     private String imagePath;
+    private int initialIngredients;
+    private int initialInstructions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +103,26 @@ public class new_recipe extends AppCompatActivity {
 
         //Images
         userImage = findViewById(R.id.imgRecipe);
+        //Database
+        recipeDB = new RecipeDBHelper(this);
+
+        //Intent
+        Intent edit = getIntent();
+        Bundle bundle = edit.getExtras();
+        boolean isEdit = bundle.getBoolean("edit");
+        long recipeID = bundle.getLong("recipeID");
+        if(isEdit)
+        {
+            getRecipe(recipeID);
+            initialIngredients = ingredients.size();
+            initialInstructions = instructions.size();
+            btnSave.setOnClickListener(v -> updateRecipe());
+        }
+        else
+        {
+            btnSave.setOnClickListener(v -> saveRecipe());
+        }
+
 
         //Ingredients Recycler
         ingredientList = (RecyclerView) findViewById(R.id.ingredientsList);
@@ -123,19 +146,97 @@ public class new_recipe extends AppCompatActivity {
         btnAddIngredient.setOnClickListener(v -> addIngredient());
         btnAddInstruction.setOnClickListener(v -> addInstruction());
         btnClear.setOnClickListener(v -> clearRecipe());
-        btnSave.setOnClickListener(v -> saveRecipe());
+
         btnAddImage.setOnClickListener(v -> handleImage());
 
-        //Database
-        recipeDB = new RecipeDBHelper(this);
 
-        //Intent
-        Intent edit = getIntent();
-        Bundle bundle = edit.getExtras();
-        boolean isEdit = bundle.getBoolean("edit");
+
+
 
     }
 
+    public void setFields()
+    {
+        etTitle.setText(recipe.getName());
+        setRecipeImage();
+    }
+    public void setRecipeImage()
+    {
+        String imageUri = recipe.getImageUri();
+        File imageFile = new File(imageUri);
+        if(imageFile.exists())
+        {
+            Bitmap bitmap = BitmapFactory.decodeFile(imageUri);
+            userImage.setImageBitmap(bitmap);
+        }
+    }
+    public void updateRecipe()
+    {
+        recipe.setName(etTitle.getText().toString());
+        recipe.setInstructions(instructions);
+        recipe.setIngredients(ingredients);
+        if(imagePath != null)
+        {
+            recipe.setImageUri(imagePath);
+        }
+        recipeDB.open();
+        updateIngredientsWithRecipeID();
+        updateInstructionsWithRecipeID();
+        saveIngredient();
+        saveInstruction();
+        recipeDB.updateRecipe(recipe);
+        recipeDB.close();
+        Intent intent = new Intent();
+        setResult(RESULT_OK, intent);
+
+        finish();
+    }
+
+    public void getRecipe(long id)
+    {
+        recipeDB.open();
+        Cursor cursor = recipeDB.getRecipe(id);
+        if(cursor != null & cursor.moveToFirst())
+        {
+            do
+            {
+                recipe = new Recipe(cursor.getString(1));
+                recipe.setID(id);
+                recipe.setFavorite(cursor.getInt(2) == 1);
+                recipe.setImageUri(cursor.getString(3));
+            } while(cursor.moveToNext());
+        }
+        getIngredients();
+        getInstructions();
+        setFields();
+    }
+    public void getIngredients()
+    {
+        recipeDB.open();
+        Cursor cursor = recipeDB.getAllIngredients(recipe);
+        if(cursor != null & cursor.moveToFirst())
+        {
+            do
+            {
+                ingredients.add(new Ingredient(cursor.getLong(0),cursor.getLong(1), cursor.getString(2)));
+            }
+            while(cursor.moveToNext());
+        }
+    }
+
+    public void getInstructions()
+    {
+        recipeDB.open();
+        Cursor cursor = recipeDB.getAllInstructions(recipe);
+        if(cursor != null & cursor.moveToFirst())
+        {
+            do
+            {
+                instructions.add(new Instruction(cursor.getLong(0),cursor.getLong(1), cursor.getString(2)));
+            }
+            while(cursor.moveToNext());
+        }
+    }
 
     public void saveRecipe()
     {
@@ -158,6 +259,7 @@ public class new_recipe extends AppCompatActivity {
 
     public void saveIngredient()
     {
+        recipeDB.deleteIngredients(recipe);
         for(Ingredient ingredient : ingredients)
         {
             recipeDB.createIngredient(ingredient);
@@ -166,6 +268,7 @@ public class new_recipe extends AppCompatActivity {
 
     public void saveInstruction()
     {
+        recipeDB.deleteInstructions(recipe);
         for(Instruction instruction : instructions)
         {
             recipeDB.createInstruction(instruction);
@@ -407,6 +510,7 @@ public class new_recipe extends AppCompatActivity {
         else //New recipe was clicked
         {
             Intent intent = new Intent(this, new_recipe.class);
+            intent.putExtra("edit", false);
             this.startActivity(intent);
         }
         return true;

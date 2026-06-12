@@ -85,4 +85,9 @@ public class Recipe implements Serializable
     {
         return this.imageUri;
     }
+
+    public void setName(String sName)
+    {
+        this.name = sName;
+    }
 }

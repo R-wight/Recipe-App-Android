@@ -160,7 +160,6 @@ public class view_recipe extends AppCompatActivity {
     {
         recipeDB.open();
         Cursor cursor = recipeDB.getRecipe(id);
-        //cursor.moveToNext();
         Recipe recipe = new Recipe(cursor.getString(1));
         recipe.setImageUri(cursor.getString(3));
         cursor.close();
@@ -208,7 +207,6 @@ public class view_recipe extends AppCompatActivity {
     {
         String imageUri = recipe.getImageUri();
         File imageFile = new File(imageUri);
-        Log.d("IMG_PATH", imageUri);
         if(imageFile.exists())
         {
             Bitmap bitmap = BitmapFactory.decodeFile(imageUri);
@@ -216,10 +214,24 @@ public class view_recipe extends AppCompatActivity {
         }
     }
 
+    public void loadRecipes(long id)
+    {
+        recipe = getRecipe(id);
+        recipe.setID(id);
+        recipe.setFavorite(isFavorite(id));
+        ingredients.clear();
+        instructions.clear();
+        getIngredients();
+        getInstructions();
+        ingredientAdapter.notifyDataSetChanged();
+        instructionAdapter.notifyDataSetChanged();
+    }
+
     public void editRecipe()
     {
         Intent intent = new Intent(this, new_recipe.class);
         intent.putExtra("edit", true);
+        intent.putExtra("recipeID", recipe.getID());
         this.startActivityForResult(intent, 1);
     }
     @Override
@@ -230,7 +242,7 @@ public class view_recipe extends AppCompatActivity {
         {
             if (resultCode == RESULT_OK) //Recipe Created
             {
-
+                loadRecipes(recipe.getID());
             }
         }
     }
@@ -356,6 +368,7 @@ public class view_recipe extends AppCompatActivity {
         else //New recipe was clicked
         {
             Intent intent = new Intent(this, new_recipe.class);
+            intent.putExtra("edit", false);
             this.startActivity(intent);
         }
         return true;

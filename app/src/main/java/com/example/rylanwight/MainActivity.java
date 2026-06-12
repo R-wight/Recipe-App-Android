@@ -131,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
         else //New recipe was clicked
         {
             Intent intent = new Intent(this, new_recipe.class);
+            intent.putExtra("edit", false);
             this.startActivityForResult(intent, 1);
         }
         return true;
