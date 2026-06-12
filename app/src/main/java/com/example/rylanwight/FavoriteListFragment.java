@@ -47,11 +47,6 @@ public class FavoriteListFragment extends Fragment
     {
         recipeDB = new RecipeDBHelper(getContext());
         recipes = new ArrayList<>();
-        ArrayList<Ingredient> ingredients2 = new ArrayList<Ingredient>();
-        ingredients2.add(new Ingredient( "Chicken"));
-
-        ArrayList<Instruction> instructions2 = new ArrayList<>();
-        instructions2.add(new Instruction( "Cook chicken"));
 
         //DATABASE
         recipeDB.open();
@@ -60,15 +55,13 @@ public class FavoriteListFragment extends Fragment
         {
             do
             {
-                Recipe recipe = new Recipe(recipeCursor.getString(1), ingredients2, instructions2);
+                Recipe recipe = new Recipe(recipeCursor.getString(1));
                 recipe.setID(recipeCursor.getLong(0));
                 recipes.add(recipe);
             }
             while(recipeCursor.moveToNext());
         }
         recipeDB.close();
-
-
 
         View recipeListLayout = inflater.inflate(R.layout.recipe_list_fragment, container, false);
 
@@ -79,13 +72,10 @@ public class FavoriteListFragment extends Fragment
             @Override
             public void onItemClick(View view, int position)
             {
-
-                Toast.makeText(getContext(), recipes.get(position).getName(), Toast.LENGTH_SHORT).show();
                 //View the recipe and pass information
                 Intent intent = new Intent(view.getContext(), view_recipe.class); // this is the activity that we want to start
                 intent.putExtra("recipe", recipes.get(position));
                 view.getContext().startActivity(intent);
-
             }
         });
         recipeList.setAdapter(recipeAdapter);

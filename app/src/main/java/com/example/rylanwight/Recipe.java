@@ -9,6 +9,7 @@ public class Recipe implements Serializable
     private long ID;
     private String name;
     private boolean isFavorite;
+    private String imageUri;
     private ArrayList<Ingredient> ingredients;
     private ArrayList<Instruction> instructions;
 
@@ -19,6 +20,7 @@ public class Recipe implements Serializable
         this.isFavorite = false;
         this.ingredients = ingredients;
         this.instructions = instructions;
+        this.imageUri = "";
     }
 
     public Recipe(String name)
@@ -28,6 +30,7 @@ public class Recipe implements Serializable
         this.isFavorite = false;
         this.ingredients = null;
         this.instructions = null;
+        this.imageUri = "";
     }
 
     public String getName()
@@ -72,5 +75,14 @@ public class Recipe implements Serializable
     public void setInstructions(ArrayList<Instruction> obList)
     {
         this.instructions = obList;
+    }
+    public void setImageUri(String uri)
+    {
+        this.imageUri = uri;
+    }
+
+    public String getImageUri()
+    {
+        return this.imageUri;
     }
 }

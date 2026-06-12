@@ -50,54 +50,19 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
-        //Obtain the Fragment Manager, this lets us access fragment instances
-        //FragmentManager manager = getSupportFragmentManager();
-        //Obtain references to the Fragment
-        //RecipeListFragment listFragment = (RecipeListFragment) manager.findFragmentById(R.id.listFragment);
-        //listFragment.setRecipeSelectedListener(this); //Might not need this
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        ingredients1 = new ArrayList<Ingredient>();
-        ingredients1.add(new Ingredient( "Spaghetti"));
-        instructions1 = new ArrayList<>();
-        instructions1.add(new Instruction( "Boil Pasta"));
-        ingredients2 = new ArrayList<Ingredient>();
-        ingredients2.add(new Ingredient( "T-bone"));
-        instructions2 = new ArrayList<>();
-        instructions2.add(new Instruction("Turn on grill"));
 
         toolbar = findViewById(R.id.tbTop);
         toolbar.setTitle("Recipe Box");
         //set the activities action bar to be this object
         setSupportActionBar(toolbar);
-        //Recipe recipe3 = new Recipe("Pizza", ingredients1, instructions1);
-        //recipe3.setFavorite(true);
 
         //DATABASE
         recipeDB = new RecipeDBHelper(this);
-//        recipeDB.open();
-//        //recipeDB.onUpgrade(recipeDB.sqlDB, 0, 1);
-//        recipeDB.createRecipe(new Recipe("Pasta", ingredients1, instructions1));
-//        recipeDB.createRecipe(new Recipe("Steak", ingredients2, instructions2));
-//        recipeDB.createRecipe(recipe3);
-//        recipeDB.close();
-
-        recipeDB.open();
-        recipeCursor = recipeDB.getAllRecipes();
-        if(recipeCursor.moveToFirst())
-        {
-            do
-            {
-                Log.i("Row: ", recipeCursor.getString(0) + "," +
-                        recipeCursor.getString(1));
-            }
-            while(recipeCursor.moveToNext());
-        }
-        recipeDB.close();
 
         tabLayout = findViewById(R.id.Tabs);
         viewPager = findViewById(R.id.view_pager);
@@ -123,7 +88,6 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
             }
         };
         viewPager.setAdapter(adapter);
-        //tabLayout.setupWithViewPager(viewPager);
 
         TabLayoutMediator mediator = new TabLayoutMediator(
                 tabLayout,
@@ -160,16 +124,13 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
     {
         if(item.getItemId() == R.id.mnuViewRecipes)
         {
-            //Toast.makeText(this, "View Recipes", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class); // this is the activity that we want to start
             this.startActivity(intent);
 
         }
         else //New recipe was clicked
         {
-            //Toast.makeText(this, "New Recipe", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, new_recipe.class);
-            //this.startActivity(intent);
             this.startActivityForResult(intent, 1);
         }
         return true;
@@ -179,9 +140,6 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
     public void setSelectedRecipe(Recipe recipe)
     {
         Toast.makeText(this, "Open: " + recipe.getName(), Toast.LENGTH_SHORT).show();
-        //Intent intent = new Intent(this, DetailActivity.class);
-        //intent.putExtra("course", course);
-        //this.startActivity(intent);
     }
 
     @Override

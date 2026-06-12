@@ -2,7 +2,13 @@ package com.example.rylanwight;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.media.Image;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -12,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +32,9 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -52,6 +62,10 @@ public class new_recipe extends AppCompatActivity {
     private Button btnAddInstruction;
     private Button btnClear;
     private Button btnSave;
+    private Button btnAddImage;
+    private ImageView userImage;
+    private Uri imageUri;
+    private String imagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +86,7 @@ public class new_recipe extends AppCompatActivity {
         btnAddInstruction = findViewById(R.id.btnAddInstruction);
         btnClear = findViewById(R.id.btnClear);
         btnSave = findViewById(R.id.btnSaveRecipe);
+        btnAddImage = findViewById(R.id.btnAddImg);
 
         //Initialize toolbar
         Toolbar toolbar = findViewById(R.id.tbNewRecipe);
@@ -82,6 +97,9 @@ public class new_recipe extends AppCompatActivity {
         etIngredient = findViewById(R.id.etIngredient);
         etInstruction = findViewById(R.id.etInstruction);
         etTitle = findViewById(R.id.etRecipeName);
+
+        //Images
+        userImage = findViewById(R.id.imgRecipe);
 
         //Ingredients Recycler
         ingredientList = (RecyclerView) findViewById(R.id.ingredientsList);
@@ -106,9 +124,15 @@ public class new_recipe extends AppCompatActivity {
         btnAddInstruction.setOnClickListener(v -> addInstruction());
         btnClear.setOnClickListener(v -> clearRecipe());
         btnSave.setOnClickListener(v -> saveRecipe());
+        btnAddImage.setOnClickListener(v -> handleImage());
 
         //Database
         recipeDB = new RecipeDBHelper(this);
+
+        //Intent
+        Intent edit = getIntent();
+        Bundle bundle = edit.getExtras();
+        boolean isEdit = bundle.getBoolean("edit");
 
     }
 
@@ -116,6 +140,7 @@ public class new_recipe extends AppCompatActivity {
     public void saveRecipe()
     {
         recipe = new Recipe(etTitle.getText().toString(), new ArrayList<>(), new ArrayList());
+        recipe.setImageUri(imagePath);
         recipeDB.open();
         recipeDB.createRecipe(recipe);
         updateIngredientsWithRecipeID();
@@ -185,12 +210,60 @@ public class new_recipe extends AppCompatActivity {
         etInstruction.setText("");
     }
 
-    /**
-     * Maybe change this to cancel?
-     */
+
     public void clearRecipe()
     {
         finish();
+    }
+
+    public void handleImage()
+    {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        startActivityForResult(intent, 100);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 100)
+        {
+            if(resultCode == RESULT_OK) //get the users image
+            {
+                imageUri = data.getData();
+
+                //save to internal storage
+                try
+                {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
+                    imagePath = saveImage(bitmap);
+                    userImage.setImageBitmap(bitmap);
+                }
+                catch(IOException exp)
+                {
+                    exp.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private String saveImage(Bitmap bitmap)
+    {
+        File obDir = getFilesDir();
+        File obFile = new File(obDir, "recipe_" + System.currentTimeMillis() + ".png"); //creates unique file name
+        try
+        {
+            FileOutputStream obOut = new FileOutputStream(obFile);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, obOut);
+            obOut.flush();
+            obOut.close();
+        }
+        catch(IOException exp)
+        {
+            exp.printStackTrace();
+        }
+        return obFile.getAbsolutePath();
     }
 
     //BELOW IS FOR RECYCLERS
@@ -243,14 +316,13 @@ public class new_recipe extends AppCompatActivity {
                 super(itemView);
                 tvInstruction = itemView.findViewById(R.id.tvInstruction);
                 delBtn = itemView.findViewById(R.id.btnInsDelete);
-                itemView.setOnClickListener(this); //Not sure if this will be needed
+                itemView.setOnClickListener(this);
             }
             //Not sure if this is needed either
             @Override
             public void onClick(View v)
             {
                 if (mClickListener != null) mClickListener.onItemClick(v, getAdapterPosition());
-                Toast.makeText(v.getContext(), "View Recipes", Toast.LENGTH_LONG).show();
             }
         }
     }
@@ -265,7 +337,6 @@ public class new_recipe extends AppCompatActivity {
         {
             this.mInflater = LayoutInflater.from(context);
             this.ingredients = ingredients;
-            //this.mClickListener = listener;
         }
 
         //inflates the layout we created that will show one row of data
@@ -304,7 +375,7 @@ public class new_recipe extends AppCompatActivity {
                 super(itemView);
                 tvIngredient = itemView.findViewById(R.id.tvIngredient);
                 delBtn = itemView.findViewById(R.id.btnIngDelete);
-                itemView.setOnClickListener(this); //Not sure if this will be needed
+                itemView.setOnClickListener(this);
             }
             //Not sure if this is needed either
             @Override
@@ -329,14 +400,12 @@ public class new_recipe extends AppCompatActivity {
     {
         if(item.getItemId() == R.id.mnuViewRecipes)
         {
-            //Toast.makeText(this, "View Recipes", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, MainActivity.class); // this is the activity that we want to start
             this.startActivity(intent);
 
         }
         else //New recipe was clicked
         {
-            //Toast.makeText(this, "New Recipe", Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, new_recipe.class);
             this.startActivity(intent);
         }

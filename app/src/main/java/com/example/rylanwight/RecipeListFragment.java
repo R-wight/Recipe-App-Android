@@ -76,14 +76,10 @@ public class RecipeListFragment extends Fragment
             @Override
             public void onItemClick(View view, int position)
             {
-
-                Toast.makeText(getContext(), recipes.get(position).getID() + "", Toast.LENGTH_SHORT).show();
                 //View the recipe and pass information
                 Intent intent = new Intent(view.getContext(), view_recipe.class); // this is the activity that we want to start
                 intent.putExtra("recipe", recipes.get(position).getID());
-                //view.getContext().startActivity(intent);
                 startActivityForResult(intent, 1);
-
             }
         });
         recipeList.setAdapter(recipeAdapter);

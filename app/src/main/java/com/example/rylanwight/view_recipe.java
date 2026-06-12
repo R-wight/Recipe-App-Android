@@ -5,8 +5,11 @@ import static java.security.AccessController.getContext;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +32,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class view_recipe extends AppCompatActivity {
@@ -42,7 +47,10 @@ public class view_recipe extends AppCompatActivity {
     private RecyclerView.Adapter instructionAdapter;
     private TextView recipeName;
     private Button btnDel;
+    private Button btnBack;
+    private Button btnEdit;
     private ImageButton btnFav;
+    private ImageView recipeImg;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,10 +73,10 @@ public class view_recipe extends AppCompatActivity {
 
         //Initialize views
         recipeName = findViewById(R.id.tvRecipeName);
+        recipeImg = findViewById(R.id.imgViewRecipe);
 
         //Current Recipe
         long recipeID = getIntent().getLongExtra("recipe", 0);
-        //recipe = (Recipe) getIntent().getSerializableExtra("recipe");
         recipe = getRecipe(recipeID);
         recipe.setID(recipeID);
         recipe.setFavorite(isFavorite(recipeID));
@@ -78,11 +86,10 @@ public class view_recipe extends AppCompatActivity {
         getInstructions();
         recipe.setInstructions(instructions);
         recipe.setIngredients(ingredients);
-//        ingredients = recipeDB.getAllIngredients();
-//        instructions = recipe.getInstructions();
 
         //Set views
         recipeName.setText(recipe.getName());
+        setRecipeImage();
 
         //Ingredient list recycler
         ingredientList = (RecyclerView) findViewById(R.id.ingredientList);
@@ -102,11 +109,17 @@ public class view_recipe extends AppCompatActivity {
         DividerItemDecoration dividerItemDecorationInstr = new DividerItemDecoration(instructionList.getContext(), manager.getOrientation());
         instructionList.addItemDecoration(dividerItemDecorationInstr);
 
-        //DELETE BUTTON
+        //Buttons
         btnDel = findViewById(R.id.btnDelete);
         btnDel.setOnClickListener(v -> deleteRecipe());
         btnFav = findViewById(R.id.btnFavorite);
         btnFav.setOnClickListener(v -> updateRecipe(recipe));
+        btnBack = findViewById(R.id.btnBack);
+        btnBack.setOnClickListener(v -> finish());
+        btnEdit = findViewById(R.id.btnEdit);
+        btnEdit.setOnClickListener(v -> editRecipe());
+
+        //Set favorite image
         if (recipe.getFavorite())
         {
             btnFav.setImageResource(android.R.drawable.btn_star_big_on);
@@ -149,6 +162,7 @@ public class view_recipe extends AppCompatActivity {
         Cursor cursor = recipeDB.getRecipe(id);
         //cursor.moveToNext();
         Recipe recipe = new Recipe(cursor.getString(1));
+        recipe.setImageUri(cursor.getString(3));
         cursor.close();
         recipeDB.close();
         return recipe;
@@ -190,6 +204,36 @@ public class view_recipe extends AppCompatActivity {
         recipeDB.close();
     }
 
+    public void setRecipeImage()
+    {
+        String imageUri = recipe.getImageUri();
+        File imageFile = new File(imageUri);
+        Log.d("IMG_PATH", imageUri);
+        if(imageFile.exists())
+        {
+            Bitmap bitmap = BitmapFactory.decodeFile(imageUri);
+            recipeImg.setImageBitmap(bitmap);
+        }
+    }
+
+    public void editRecipe()
+    {
+        Intent intent = new Intent(this, new_recipe.class);
+        intent.putExtra("edit", true);
+        this.startActivityForResult(intent, 1);
+    }
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1)
+        {
+            if (resultCode == RESULT_OK) //Recipe Created
+            {
+
+            }
+        }
+    }
     public class InstructionListAdapter extends RecyclerView.Adapter<InstructionListAdapter.ViewHolder>
     {
         private ItemClickListener mClickListener;
@@ -200,7 +244,7 @@ public class view_recipe extends AppCompatActivity {
         {
             this.mInflater = LayoutInflater.from(context);
             this.instructions = instructions;
-            //this.mClickListener = listener;
+
         }
 
         //inflates the layout we created that will show one row of data
@@ -231,9 +275,8 @@ public class view_recipe extends AppCompatActivity {
             {
                 super(itemView);
                 tvInstruction = itemView.findViewById(R.id.tvInstruction);
-                itemView.setOnClickListener(this); //Not sure if this will be needed
+                itemView.setOnClickListener(this);
             }
-            //Not sure if this is needed either
             @Override
             public void onClick(View v)
             {
@@ -252,7 +295,6 @@ public class view_recipe extends AppCompatActivity {
         {
             this.mInflater = LayoutInflater.from(context);
             this.ingredients = ingredients;
-            //this.mClickListener = listener;
         }
 
         //inflates the layout we created that will show one row of data
@@ -283,9 +325,9 @@ public class view_recipe extends AppCompatActivity {
             {
                 super(itemView);
                 tvIngredient = itemView.findViewById(R.id.tvIngredient);
-                itemView.setOnClickListener(this); //Not sure if this will be needed
+                itemView.setOnClickListener(this);
             }
-            //Not sure if this is needed either
+
             @Override
             public void onClick(View v)
             {

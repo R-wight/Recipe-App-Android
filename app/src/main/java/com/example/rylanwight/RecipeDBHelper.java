@@ -11,10 +11,11 @@ public class RecipeDBHelper extends SQLiteOpenHelper
 {
     private static final String DB_NAME = "recipe1.db";
     private static final String TABLE_NAME = "Recipes";
-    private static final int DB_VERSION = 3;
+    private static final int DB_VERSION = 5;
     public static final String ID = "_id";
     public static final String NAME = "name";
     public static final String IS_FAVORITE = "isFavorite";
+    public static final String IMAGE = "image_path";
     public SQLiteDatabase sqlDB;
 
     public RecipeDBHelper(Context context)
@@ -33,7 +34,8 @@ public class RecipeDBHelper extends SQLiteOpenHelper
                 TABLE_NAME + " (" +
                 ID + " integer primary key autoincrement, " +
                 NAME + " text not null, " +
-                IS_FAVORITE + " integer not null default 0);";
+                IS_FAVORITE + " integer not null default 0, " +
+                IMAGE + " text not null);";
 
         String sCreateInstruction = "create table instructions (" +
                                     "_id integer primary key autoincrement, " +
@@ -53,6 +55,8 @@ public class RecipeDBHelper extends SQLiteOpenHelper
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS instructions");
+        db.execSQL("DROP TABLE IF EXISTS ingredients");
         onCreate(db);
     }
 
@@ -62,6 +66,7 @@ public class RecipeDBHelper extends SQLiteOpenHelper
 
         cvs.put(NAME, recipe.getName());
         cvs.put(IS_FAVORITE, recipe.isFavorite());
+        cvs.put(IMAGE, recipe.getImageUri());
         long autoId = sqlDB.insert(TABLE_NAME, null, cvs);
         recipe.setID(autoId);
 
@@ -100,6 +105,7 @@ public class RecipeDBHelper extends SQLiteOpenHelper
             ContentValues cvs = new ContentValues();
             cvs.put(NAME, recipe.getName());
             cvs.put(IS_FAVORITE, recipe.isFavorite());
+            cvs.put(IMAGE, recipe.getImageUri());
             return sqlDB.update(TABLE_NAME, cvs, ID + " = " + recipe.getID(), null) > 0;
         }
     }
@@ -155,7 +161,7 @@ public class RecipeDBHelper extends SQLiteOpenHelper
 
     public Cursor getAllRecipes()
     {
-        String[] sFields = new String[] {ID, NAME, IS_FAVORITE};
+        String[] sFields = new String[] {ID, NAME, IS_FAVORITE, IMAGE};
         return sqlDB.query(TABLE_NAME, sFields, null, null, null, null, null);
     }
     public Cursor getAllInstructions(Recipe recipe)
@@ -171,13 +177,13 @@ public class RecipeDBHelper extends SQLiteOpenHelper
 
     public Cursor getAllFavorites()
     {
-        String[] sFields = new String[] {ID, NAME, IS_FAVORITE};
+        String[] sFields = new String[] {ID, NAME, IS_FAVORITE, IMAGE};
         return sqlDB.query(TABLE_NAME, sFields, IS_FAVORITE + " = " + 1, null, null, null, null);
     }
 
     public Cursor getRecipe(long id) throws SQLException
     {
-        String[] sFields = new String[] {ID, NAME, IS_FAVORITE};
+        String[] sFields = new String[] {ID, NAME, IS_FAVORITE, IMAGE};
         Cursor recipeCursor = sqlDB.query(true, TABLE_NAME, sFields, ID + " = " + id, null, null, null, null, null);
         if(recipeCursor != null)
         {

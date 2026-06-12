@@ -106,12 +106,11 @@
         android:id="@+id/btnDelete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="32dp"
         android:layout_marginBottom="72dp"
         android:text="Delete Recipe"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toEndOf="@+id/ingredientsCard" />
 
     <ImageButton
         android:id="@+id/btnFavorite"
@@ -123,5 +122,39 @@
         app:layout_constraintStart_toEndOf="@+id/tvRecipeName"
         app:layout_constraintTop_toBottomOf="@+id/tbViewRecipe"
         app:srcCompat="@android:drawable/btn_star_big_off" />
+
+    <Button
+        android:id="@+id/btnBack"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="64dp"
+        android:text="Back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/instructionsCard"
+        app:layout_constraintTop_toTopOf="@+id/btnDelete"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imgViewRecipe"
+        android:layout_width="500px"
+        android:layout_height="500px"
+        android:layout_marginBottom="128dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/checkbox_on_background" />
+
+    <Button
+        android:id="@+id/btnEdit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:text="Edit Recipe"
+        app:layout_constraintEnd_toStartOf="@+id/btnBack"
+        app:layout_constraintHorizontal_bias="0.379"
+        app:layout_constraintStart_toEndOf="@+id/btnDelete"
+        app:layout_constraintTop_toTopOf="@+id/btnDelete" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
