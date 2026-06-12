@@ -26,22 +26,8 @@ public class RecipeListFragment extends Fragment
     private RecyclerView recipeList;
     private RecyclerView.Adapter recipeAdapter;
     private ArrayList<Recipe> recipes;
-    private ArrayList<Ingredient> ingredients;
-    private ArrayList<Instruction> instructions;
-    private RecipeSelectedListener listener;
     private RecipeDBHelper recipeDB;
     private Cursor recipeCursor;
-
-
-    public void setRecipeSelectedListener(RecipeSelectedListener listener)
-    {
-        this.listener = listener;
-    }
-
-    public void changeRecipe(Recipe recipe)
-    {
-        listener.setSelectedRecipe(recipe);
-    }
 
 
     //This is where I will need to get recipes from the database
@@ -52,20 +38,7 @@ public class RecipeListFragment extends Fragment
         recipes = new ArrayList<>();
 
         //DATABASE
-        recipeDB.open();
-        recipeCursor = recipeDB.getAllRecipes();
-        if(recipeCursor.moveToFirst())
-        {
-            do
-            {
-                Recipe recipe = new Recipe(recipeCursor.getString(1));
-                recipe.setID(recipeCursor.getLong(0));
-                recipe.setFavorite(recipeCursor.getInt(1) == 1);
-                recipes.add(recipe);
-            }
-            while(recipeCursor.moveToNext());
-        }
-        recipeDB.close();
+        getListFromDB();
 
         View recipeListLayout = inflater.inflate(R.layout.recipe_list_fragment, container, false);
 
@@ -87,6 +60,27 @@ public class RecipeListFragment extends Fragment
         recipeList.addItemDecoration(dividerItemDecoration);
         return recipeListLayout;
     }
+    /**
+     * This method gets all recipes from the database and adds them to an arraylist to be shown in the
+     * recycler view
+     */
+    public void getListFromDB()
+    {
+        recipeDB.open();
+        recipeCursor = recipeDB.getAllRecipes();
+        if(recipeCursor.moveToFirst())
+        {
+            do
+            {
+                Recipe recipe = new Recipe(recipeCursor.getString(1));
+                recipe.setID(recipeCursor.getLong(0));
+                recipe.setFavorite(recipeCursor.getInt(1) == 1);
+                recipes.add(recipe);
+            }
+            while(recipeCursor.moveToNext());
+        }
+        recipeDB.close();
+    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
@@ -101,6 +95,9 @@ public class RecipeListFragment extends Fragment
         }
     }
 
+    /**
+     * This method clears the recipes arraylist and reloads the data from the database to ensure it is up to date
+     */
     public void refreshRecipes()
     {
         recipes.clear();
@@ -121,12 +118,7 @@ public class RecipeListFragment extends Fragment
         recipeAdapter.notifyDataSetChanged();
     }
 
-    public void updateFavorite(Recipe recipe)
-    {
-        recipeDB.open();
-        recipeDB.updateRecipe(recipe);
-        recipeDB.close();
-    }
+    //RECYCLER VIEW BELOW
     public class RecipeListAdapter extends RecyclerView.Adapter<RecipeListAdapter.ViewHolder>
     {
         private ItemClickListener mClickListener;

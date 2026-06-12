@@ -145,7 +145,7 @@ public class new_recipe extends AppCompatActivity {
         //Button Listeners
         btnAddIngredient.setOnClickListener(v -> addIngredient());
         btnAddInstruction.setOnClickListener(v -> addInstruction());
-        btnClear.setOnClickListener(v -> clearRecipe());
+        btnClear.setOnClickListener(v -> finish());
 
         btnAddImage.setOnClickListener(v -> handleImage());
 
@@ -155,11 +155,18 @@ public class new_recipe extends AppCompatActivity {
 
     }
 
+    /**
+     * This method sets the elements with data if the user came from clicking the edit recipe button
+     */
     public void setFields()
     {
         etTitle.setText(recipe.getName());
         setRecipeImage();
     }
+
+    /**
+     * This method sets the image if a user adds one from the add image button
+     */
     public void setRecipeImage()
     {
         String imageUri = recipe.getImageUri();
@@ -170,8 +177,17 @@ public class new_recipe extends AppCompatActivity {
             userImage.setImageBitmap(bitmap);
         }
     }
+
+    /**
+     * This method updates a recipe in the database if the user is editing a recipe
+     */
     public void updateRecipe()
     {
+        if(etTitle.getText().toString().trim().length() < 1)
+        {
+            Toast.makeText(this, "Recipe Name field was left empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         recipe.setName(etTitle.getText().toString());
         recipe.setInstructions(instructions);
         recipe.setIngredients(ingredients);
@@ -192,6 +208,10 @@ public class new_recipe extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * This method gets a specific recipe from the database based on their id
+     * @param id
+     */
     public void getRecipe(long id)
     {
         recipeDB.open();
@@ -210,6 +230,10 @@ public class new_recipe extends AppCompatActivity {
         getInstructions();
         setFields();
     }
+
+    /**
+     * This method gets all ingredients associated with the recipe if the user is editing an existing recipe
+     */
     public void getIngredients()
     {
         recipeDB.open();
@@ -223,7 +247,9 @@ public class new_recipe extends AppCompatActivity {
             while(cursor.moveToNext());
         }
     }
-
+    /**
+     * This method gets all instructions associated with the recipe if the user is editing an existing recipe
+     */
     public void getInstructions()
     {
         recipeDB.open();
@@ -238,8 +264,16 @@ public class new_recipe extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method saves a new recipe to the database
+     */
     public void saveRecipe()
     {
+        if(etTitle.getText().toString().trim().length() < 1)
+        {
+            Toast.makeText(this, "Recipe Name field was left empty!", Toast.LENGTH_SHORT).show();
+            return;
+        }
         recipe = new Recipe(etTitle.getText().toString(), new ArrayList<>(), new ArrayList());
         recipe.setImageUri(imagePath);
         recipeDB.open();
@@ -257,6 +291,9 @@ public class new_recipe extends AppCompatActivity {
         finish();
     }
 
+    /**
+     * This method is used to save ingredients to the database, this method is called by saveRecipe
+     */
     public void saveIngredient()
     {
         recipeDB.deleteIngredients(recipe);
@@ -265,7 +302,9 @@ public class new_recipe extends AppCompatActivity {
             recipeDB.createIngredient(ingredient);
         }
     }
-
+    /**
+     * This method is used to save instructions to the database, this method is called by saveRecipe
+     */
     public void saveInstruction()
     {
         recipeDB.deleteInstructions(recipe);
@@ -274,6 +313,10 @@ public class new_recipe extends AppCompatActivity {
             recipeDB.createInstruction(instruction);
         }
     }
+
+    /**
+     * This method updates the list of ingredients with the recipeID so they can be properly stored in the database
+     */
     public void updateIngredientsWithRecipeID()
     {
         for(Ingredient ingredient : ingredients)
@@ -282,6 +325,9 @@ public class new_recipe extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method updates the list of instructions with the recipeID so they can be properly stored in the database
+     */
     public void updateInstructionsWithRecipeID()
     {
         for(Instruction instruction : instructions)
@@ -289,6 +335,10 @@ public class new_recipe extends AppCompatActivity {
             instruction.setRecipeId(recipe.getID());
         }
     }
+
+    /**
+     * This method adds an ingredient to the ingredients arraylist and clears the corresponding EditText field
+     */
     public void addIngredient()
     {
         if(etIngredient.getText().toString().trim().equals(""))
@@ -300,7 +350,9 @@ public class new_recipe extends AppCompatActivity {
         ingredientAdapter.notifyDataSetChanged();
         etIngredient.setText("");
     }
-
+    /**
+     * This method adds an instruction to the instructions arraylist and clears the corresponding EditText field
+     */
     public void addInstruction()
     {
         if(etInstruction.getText().toString().trim().equals(""))
@@ -313,18 +365,29 @@ public class new_recipe extends AppCompatActivity {
         etInstruction.setText("");
     }
 
-
-    public void clearRecipe()
-    {
-        finish();
-    }
-
+    /**
+     * This method handles getting an image from the user
+     */
     public void handleImage()
     {
         Intent intent = new Intent(Intent.ACTION_PICK);
         intent.setType("image/*");
         startActivityForResult(intent, 100);
     }
+
+    /**
+     * This method saves the image to internal storage so it can be saved to the database
+     *
+     *
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -351,6 +414,11 @@ public class new_recipe extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method creates a unique file name and handles the actual compressing and saving of the image
+     * @param bitmap
+     * @return - the absolute path of the image
+     */
     private String saveImage(Bitmap bitmap)
     {
         File obDir = getFilesDir();
@@ -380,7 +448,6 @@ public class new_recipe extends AppCompatActivity {
         {
             this.mInflater = LayoutInflater.from(context);
             this.instructions = instructions;
-            //this.mClickListener = listener;
         }
 
         //inflates the layout we created that will show one row of data

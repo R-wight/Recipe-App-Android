@@ -3,6 +3,9 @@ package com.example.rylanwight;
 import java.io.Serializable;
 import java.util.prefs.PreferenceChangeEvent;
 
+/**
+ * This class represents an ingredient to be stored in the database that corresponds to a specific recipe
+ */
 public class Ingredient implements Serializable
 {
     private long id;

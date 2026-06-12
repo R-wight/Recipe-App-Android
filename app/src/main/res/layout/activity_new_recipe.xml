@@ -95,7 +95,11 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="95dp"
             android:layout_marginBottom="15dp"
-            android:text="Add Ingredient" />
+            android:backgroundTint="#E6BEAE"
+            android:text="Add Ingredient"
+            android:textColor="#000000"
+            app:strokeColor="#101010"
+            app:strokeWidth="1dp" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -137,7 +141,11 @@
             android:layout_marginStart="15dp"
             android:layout_marginTop="95dp"
             android:layout_marginBottom="15dp"
-            android:text="Add Instruction" />
+            android:backgroundTint="#E6BEAE"
+            android:text="Add Instruction"
+            android:textColor="#000000"
+            app:strokeColor="#101010"
+            app:strokeWidth="1dp" />
     </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
@@ -196,20 +204,28 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
+        android:backgroundTint="#E6BEAE"
         android:text="Add Image"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="@+id/imgRecipe"
         app:layout_constraintStart_toEndOf="@+id/imgRecipe"
-        app:layout_constraintTop_toTopOf="@+id/imgRecipe" />
+        app:layout_constraintTop_toTopOf="@+id/imgRecipe"
+        app:strokeColor="#101010"
+        app:strokeWidth="1dp" />
 
     <Button
         android:id="@+id/btnSaveRecipe"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="#E6BEAE"
         android:text="Save Recipe"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnClear"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="#101010"
+        app:strokeWidth="1dp" />
 
     <Button
         android:id="@+id/btnClear"
@@ -217,7 +233,11 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="72dp"
         android:layout_marginBottom="8dp"
+        android:backgroundTint="#E6BEAE"
         android:text="Cancel"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:strokeColor="#101010"
+        app:strokeWidth="1dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

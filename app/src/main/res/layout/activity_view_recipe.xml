@@ -108,9 +108,13 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="72dp"
+        android:backgroundTint="#E6BEAE"
         android:text="Delete Recipe"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/ingredientsCard" />
+        app:layout_constraintEnd_toEndOf="@+id/ingredientsCard"
+        app:strokeColor="#101010"
+        app:strokeWidth="1dp" />
 
     <ImageButton
         android:id="@+id/btnFavorite"
@@ -128,11 +132,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="64dp"
+        android:backgroundTint="#E6BEAE"
         android:text="Back"
+        android:textColor="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/instructionsCard"
         app:layout_constraintTop_toTopOf="@+id/btnDelete"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintVertical_bias="0.0"
+        app:strokeColor="#101010"
+        app:strokeWidth="1dp" />
 
     <ImageView
         android:id="@+id/imgViewRecipe"
@@ -151,10 +159,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
+        android:backgroundTint="#E6BEAE"
         android:text="Edit Recipe"
+        android:textColor="#000000"
         app:layout_constraintEnd_toStartOf="@+id/btnBack"
         app:layout_constraintHorizontal_bias="0.379"
         app:layout_constraintStart_toEndOf="@+id/btnDelete"
-        app:layout_constraintTop_toTopOf="@+id/btnDelete" />
+        app:layout_constraintTop_toTopOf="@+id/btnDelete"
+        app:strokeColor="#101010"
+        app:strokeWidth="1dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

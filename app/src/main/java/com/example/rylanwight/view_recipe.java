@@ -65,7 +65,6 @@ public class view_recipe extends AppCompatActivity {
         //Initialize toolbar
         Toolbar toolbar = findViewById(R.id.tbViewRecipe);
         toolbar.setTitle("Recipe Box");
-        //toolbar.setBackgroundColor(Color.parseColor("#C9C3BD"));
         setSupportActionBar(toolbar);
 
         //Database
@@ -115,7 +114,7 @@ public class view_recipe extends AppCompatActivity {
         btnFav = findViewById(R.id.btnFavorite);
         btnFav.setOnClickListener(v -> updateRecipe(recipe));
         btnBack = findViewById(R.id.btnBack);
-        btnBack.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> back());
         btnEdit = findViewById(R.id.btnEdit);
         btnEdit.setOnClickListener(v -> editRecipe());
 
@@ -132,6 +131,20 @@ public class view_recipe extends AppCompatActivity {
 
     }
 
+    /**
+     * This method handles the back button logic, it sends a result to tell the tabs to update their list
+     * incase favorites have been changed.
+     */
+    public void back()
+    {
+        Intent intent = new Intent();
+        setResult(5);
+        finish();
+    }
+
+    /**
+     * this method deletes the recipe you are currently viewing
+     */
     public void deleteRecipe()
     {
         recipeDB.open();
@@ -141,6 +154,11 @@ public class view_recipe extends AppCompatActivity {
         setResult(5, intent);
         finish();
     }
+
+    /**
+     * This method updates the recipe in the database to change whether it is favorited or not
+     * @param recipe
+     */
     public void updateRecipe(Recipe recipe)
     {
         recipe.setFavorite(!recipe.getFavorite());
@@ -156,6 +174,12 @@ public class view_recipe extends AppCompatActivity {
             btnFav.setImageResource(android.R.drawable.btn_star_big_off);
         }
     }
+
+    /**
+     * This method queries the database to get the current recipe details
+     * @param id - recipe id that was clicked in the previous activity
+     * @return - Recipe with corresponding data
+     */
     public Recipe getRecipe(long id)
     {
         recipeDB.open();
@@ -167,12 +191,21 @@ public class view_recipe extends AppCompatActivity {
         return recipe;
     }
 
+    /**
+     * This method checks the database to see if the current recipe is a favorite
+     * @param id - recipe id that was clicked in the previous activity
+     * @return - boolean
+     */
     public Boolean isFavorite(long id)
     {
         recipeDB.open();
         Cursor cursor = recipeDB.getRecipe(id);
         return cursor.getInt(2) == 1;
     }
+
+    /**
+     * This method gets all ingredients related to the current recipe
+     */
     public void getIngredients()
     {
         recipeDB.open();
@@ -187,6 +220,9 @@ public class view_recipe extends AppCompatActivity {
         recipeDB.close();
     }
 
+    /**
+     * This method gets all instructions related to the current recipe
+     */
     public void getInstructions()
     {
         recipeDB.open();
@@ -203,6 +239,9 @@ public class view_recipe extends AppCompatActivity {
         recipeDB.close();
     }
 
+    /**
+     * This method sets the image if the current recipe has an image stored in the database
+     */
     public void setRecipeImage()
     {
         String imageUri = recipe.getImageUri();
@@ -214,6 +253,10 @@ public class view_recipe extends AppCompatActivity {
         }
     }
 
+    /**
+     * This method re-loads the recipe after it has been edited
+     * @param id - recipe id
+     */
     public void loadRecipes(long id)
     {
         recipe = getRecipe(id);
@@ -225,8 +268,12 @@ public class view_recipe extends AppCompatActivity {
         getInstructions();
         ingredientAdapter.notifyDataSetChanged();
         instructionAdapter.notifyDataSetChanged();
+        recipeName.setText(recipe.getName());
     }
 
+    /**
+     * This method starts the new_recipe activity and sends information over so the recipe can be edited
+     */
     public void editRecipe()
     {
         Intent intent = new Intent(this, new_recipe.class);
@@ -246,6 +293,7 @@ public class view_recipe extends AppCompatActivity {
             }
         }
     }
+    //RECYCLER VIEWS BELOW
     public class InstructionListAdapter extends RecyclerView.Adapter<InstructionListAdapter.ViewHolder>
     {
         private ItemClickListener mClickListener;

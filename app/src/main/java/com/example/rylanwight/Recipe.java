@@ -3,6 +3,9 @@ package com.example.rylanwight;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/**
+ * This class represents a Recipe to be stored in the database
+ */
 public class Recipe implements Serializable
 {
     //Need to add boolean for favorites eventually

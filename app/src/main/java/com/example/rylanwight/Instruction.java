@@ -2,6 +2,9 @@ package com.example.rylanwight;
 
 import java.io.Serializable;
 
+/**
+ * This class represents an instruction to be stored in the database that corresponds to a specific recipe
+ */
 public class Instruction implements Serializable
 {
     private long id;

@@ -32,7 +32,11 @@
         android:id="@+id/Tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp">
+        android:layout_marginTop="10dp"
+        android:background="#ECF8F8"
+        app:tabIndicatorColor="#E6BEAE"
+        app:tabSelectedTextColor="#545454"
+        app:tabTextColor="#545454">
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tabAll"

@@ -23,25 +23,9 @@ public class FavoriteListFragment extends Fragment
     private RecyclerView recipeList;
     private RecyclerView.Adapter recipeAdapter;
     private ArrayList<Recipe> recipes;
-    private ArrayList<Ingredient> ingredients;
-    private ArrayList<Instruction> instructions;
-    private RecipeSelectedListener listener;
     private RecipeDBHelper recipeDB;
     private Cursor recipeCursor;
 
-
-    public void setRecipeSelectedListener(RecipeSelectedListener listener)
-    {
-        this.listener = listener;
-    }
-
-    public void changeRecipe(Recipe recipe)
-    {
-        listener.setSelectedRecipe(recipe);
-    }
-
-
-    //This is where I will need to get recipes from the database
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
@@ -49,20 +33,9 @@ public class FavoriteListFragment extends Fragment
         recipes = new ArrayList<>();
 
         //DATABASE
-        recipeDB.open();
-        recipeCursor = recipeDB.getAllFavorites();
-        if(recipeCursor.moveToFirst())
-        {
-            do
-            {
-                Recipe recipe = new Recipe(recipeCursor.getString(1));
-                recipe.setID(recipeCursor.getLong(0));
-                recipes.add(recipe);
-            }
-            while(recipeCursor.moveToNext());
-        }
-        recipeDB.close();
+        getListFromDB();
 
+        //Recycler
         View recipeListLayout = inflater.inflate(R.layout.recipe_list_fragment, container, false);
 
         recipeList = (RecyclerView) recipeListLayout.findViewById(R.id.recipeList);
@@ -74,8 +47,8 @@ public class FavoriteListFragment extends Fragment
             {
                 //View the recipe and pass information
                 Intent intent = new Intent(view.getContext(), view_recipe.class); // this is the activity that we want to start
-                intent.putExtra("recipe", recipes.get(position));
-                view.getContext().startActivity(intent);
+                intent.putExtra("recipe", recipes.get(position).getID()); //This passes the ID of the recipe that was chosen to view_recipe
+                startActivityForResult(intent, 1);
             }
         });
         recipeList.setAdapter(recipeAdapter);
@@ -84,6 +57,57 @@ public class FavoriteListFragment extends Fragment
         return recipeListLayout;
     }
 
+    /**
+     * This method listens to see if it needs to refresh the list of favorites
+     *
+     *
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 1)
+        {
+            if(resultCode == 5)
+            {
+                getListFromDB();
+                recipeAdapter.notifyDataSetChanged();
+            }
+        }
+    }
+
+    /**
+     * This method gets all favorited recipes from the database and adds them to an arraylist to be shown in the
+     * recycler view
+     */
+    public void getListFromDB()
+    {
+        recipes.clear();
+        recipeDB.open();
+        recipeCursor = recipeDB.getAllFavorites();
+        if(recipeCursor.moveToFirst())
+        {
+            do
+            {
+                Recipe recipe = new Recipe(recipeCursor.getString(1));
+                recipe.setID(recipeCursor.getLong(0));
+                recipe.setFavorite(recipeCursor.getInt(1) == 1);
+                recipes.add(recipe);
+            }
+            while(recipeCursor.moveToNext());
+        }
+        recipeDB.close();
+    }
+
+    //RECYCLER VIEW BELOW
     public class FavListAdapter extends RecyclerView.Adapter<FavListAdapter.ViewHolder>
     {
         private ItemClickListener mClickListener;

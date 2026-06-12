@@ -6,7 +6,10 @@ import android.database.*;
 import android.database.sqlite.*;
 
 
-
+/**
+ * This class is a database helper that deals with creating tables. As well as creating, updating, deleting records.
+ * It also queries for getting recipes, favorite recipes, instructions, and ingredients
+ */
 public class RecipeDBHelper extends SQLiteOpenHelper
 {
     private static final String DB_NAME = "recipe1.db";

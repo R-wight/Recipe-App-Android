@@ -30,16 +30,10 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements RecipeSelectedListener
+public class MainActivity extends AppCompatActivity
 {
 
     Toolbar toolbar;
-    private RecipeDBHelper recipeDB;
-    private Cursor recipeCursor;
-    private ArrayList<Ingredient> ingredients1;
-    private ArrayList<Instruction> instructions1;
-    private ArrayList<Ingredient> ingredients2;
-    private ArrayList<Instruction> instructions2;
     private TabLayout tabLayout;
     private ViewPager2 viewPager;
     private FragmentStateAdapter adapter;
@@ -56,17 +50,15 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
             return insets;
         });
 
+        //TOOLBAR
         toolbar = findViewById(R.id.tbTop);
         toolbar.setTitle("Recipe Box");
         //set the activities action bar to be this object
         setSupportActionBar(toolbar);
 
-        //DATABASE
-        recipeDB = new RecipeDBHelper(this);
-
+        //TAB LAYOUT
         tabLayout = findViewById(R.id.Tabs);
         viewPager = findViewById(R.id.view_pager);
-
         adapter = new FragmentStateAdapter(this) {
             @NonNull
             @Override
@@ -88,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
             }
         };
         viewPager.setAdapter(adapter);
-
         TabLayoutMediator mediator = new TabLayoutMediator(
                 tabLayout,
                 viewPager,
@@ -106,9 +97,6 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
                 }
         );
         mediator.attach();
-
-
-
     }
 
     @Override
@@ -131,18 +119,32 @@ public class MainActivity extends AppCompatActivity implements RecipeSelectedLis
         else //New recipe was clicked
         {
             Intent intent = new Intent(this, new_recipe.class);
-            intent.putExtra("edit", false);
+            intent.putExtra("edit", false); //This tells the new_recipe page that it is a new recipe being created
             this.startActivityForResult(intent, 1);
         }
         return true;
     }
-
     @Override
-    public void setSelectedRecipe(Recipe recipe)
+    public void onResume()
     {
-        Toast.makeText(this, "Open: " + recipe.getName(), Toast.LENGTH_SHORT).show();
+        super.onResume();
+        viewPager.getAdapter().notifyDataSetChanged();
     }
 
+
+    /**
+     * This method is used to update the lists when new recipes are created
+     *
+     *
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
